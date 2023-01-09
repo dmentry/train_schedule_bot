@@ -11,8 +11,7 @@ tg_bot_token = ENV['TELEGRAM_BOT_API_TOKEN']
 
 from = ''
 to = ''
-# check_date = Date.today.to_s
-check_date = '10.01.2023'
+check_date = ''
 out = []
 quantity_of_packs = 1
 schedule_pack_index = 0
@@ -33,11 +32,13 @@ Telegram::Bot::Client.run(tg_bot_token) do |bot|
       schedule_pack_index = 0
 
       bot.api.send_Message(chat_id: message.chat.id, text: "Привет, #{message.from.first_name}!")
-        question = 'Выберите станцию отправления из списка:'
-        answers =
-          Telegram::Bot::Types::ReplyKeyboardMarkup
-          .new(keyboard: [arr1, arr2], one_time_keyboard: true, resize_keyboard: true)
-        bot.api.send_message(chat_id: message.chat.id, text: question, reply_markup: answers)
+      question = 'Выберите, когда ехать:'
+      answers =
+        Telegram::Bot::Types::ReplyKeyboardMarkup
+        .new(keyboard: [['Сегодня', 'Завтра']], one_time_keyboard: true, resize_keyboard: true)
+      bot.api.send_message(chat_id: message.chat.id, text: question, reply_markup: answers)
+
+
     elsif message.text == '/stop'
       out = []
       from = ''
@@ -70,7 +71,18 @@ Telegram::Bot::Client.run(tg_bot_token) do |bot|
 
         out[schedule_pack_index].each do |schedule_line|
           bot.api.send_message(chat_id: message.chat.id, text: schedule_line)
+
+          if schedule_line == "Электричек на указанную дату нет."
+            kb = Telegram::Bot::Types::ReplyKeyboardRemove.new(remove_keyboard: true)
+            bot.api.send_message(chat_id: message.chat.id, text: "Пока, #{message.from.first_name}!", reply_markup: kb)
+            out = []
+            from = ''
+            to = ''
+            quantity_of_packs = 1
+            schedule_pack_index = 0            
+          end
         end
+
         schedule_pack_index += 1
 
         if schedule_pack_index <= quantity_of_packs 
@@ -80,8 +92,24 @@ Telegram::Bot::Client.run(tg_bot_token) do |bot|
             .new(keyboard: [['Да', 'Нет']], one_time_keyboard: true, resize_keyboard: true)
           bot.api.send_message(chat_id: message.chat.id, text: question, reply_markup: answers)
         end
-
       end
+    elsif message.text == 'Сегодня'
+      check_date = Date.today.to_s
+
+
+        question = 'Выберите станцию отправления из списка:'
+        answers =
+          Telegram::Bot::Types::ReplyKeyboardMarkup
+          .new(keyboard: [arr1, arr2], one_time_keyboard: true, resize_keyboard: true)
+        bot.api.send_message(chat_id: message.chat.id, text: question, reply_markup: answers)
+    elsif message.text == 'Завтра'
+      check_date = (Date.today + 1).to_s
+
+        question = 'Выберите станцию отправления из списка:'
+        answers =
+          Telegram::Bot::Types::ReplyKeyboardMarkup
+          .new(keyboard: [arr1, arr2], one_time_keyboard: true, resize_keyboard: true)
+        bot.api.send_message(chat_id: message.chat.id, text: question, reply_markup: answers)
     elsif message.text == 'Да'
       if !out.empty?
         out[schedule_pack_index].each do |schedule_line|
@@ -95,6 +123,9 @@ Telegram::Bot::Client.run(tg_bot_token) do |bot|
               Telegram::Bot::Types::ReplyKeyboardMarkup
               .new(keyboard: [['Да', 'Нет']], one_time_keyboard: true, resize_keyboard: true)
             bot.api.send_message(chat_id: message.chat.id, text: question, reply_markup: answers)
+        else
+          kb = Telegram::Bot::Types::ReplyKeyboardRemove.new(remove_keyboard: true)
+          bot.api.send_message(chat_id: message.chat.id, text: "Пока, #{message.from.first_name}!", reply_markup: kb)
         end
       else
         bot.api.send_message(chat_id: message.chat.id, text: "Сначала начните диалог, нажав на '/start'")

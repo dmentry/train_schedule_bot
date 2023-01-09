@@ -27,19 +27,30 @@ class Parsing
     j = -2
 
     temp_arr = []
-    temp_arr << "Расписание '#{ from }' -> '#{ to }' на #{ Date.parse(check_date).strftime("%d.%m.%Y") }:"
+    temp_arr << "Расписание #{ from } -> #{ to } на #{ Date.parse(check_date).strftime("%d.%m.%Y") }:"
     i = 1
 
     (elements_quantity / 2).times do
       j = j + 2
 
-      departure = Time.parse(schedule[j].text, Date.today)
+      if check_date == Date.today.to_s
+        departure = Time.parse(schedule[j].text, Date.today)
 
-      next if Date.parse(check_date) == Date.today && departure <= Time.now
+        if Date.parse(check_date) == Date.today && departure <= Time.now
+          next if out.include?(temp_arr)
+            
+          out << temp_arr
+        end
 
-      departure = departure.to_i
-      arrival   = Time.parse(schedule[j + 1].text, Date.today).to_i
-      arrival   = Time.parse(schedule[j + 1].text, Date.today + 1).to_i if departure > arrival
+        departure = departure.to_i
+        arrival   = Time.parse(schedule[j + 1].text, Date.today).to_i
+        arrival   = Time.parse(schedule[j + 1].text, Date.today + 1).to_i if departure > arrival
+      else
+        departure = Time.parse(schedule[j].text, Date.today + 1)
+
+        departure = departure.to_i
+        arrival   = Time.parse(schedule[j + 1].text, Date.today + 1).to_i
+      end
 
       time_to_drive = (arrival - departure) / 60
       time_to_drive = if time_to_drive > 60
@@ -49,13 +60,18 @@ class Parsing
                       end
 
       if i < 11
-        temp_arr << "Отпр: #{ schedule[j] }. Приб: #{ schedule[j+1] }. В пути: #{ time_to_drive }. Эл-ка: #{ trains[j] } -> #{ trains[j + 1] }"
+        temp_arr << "Отпр: #{ schedule[j] }. Приб: #{ schedule[j+1] }. В пути: #{ time_to_drive }.\nЭл-ка: #{ trains[j] } -> #{ trains[j + 1] }."
         i += 1
       else
         out << temp_arr
         i = 1
         temp_arr = []
       end
+    end
+
+    if temp_arr.size == 1 && out.size == 0
+      temp_arr << "Электричек на указанную дату нет."
+      out << temp_arr
     end
 
     out
