@@ -2,7 +2,7 @@
 Парсит расписание электричек с tutu с учетом выбранного дня и станций (их список предопределен). Написал его, т.к. лень постоянно лезть на их сайт, там вбивать станции и дату. 
 
 ## Скриншот
-![Application screenshot](https://github.com/dmentry/WeatherForecastBot/blob/master/Screenshot.jpg)
+![Application screenshot](https://github.com/dmentry/train_schedule_bot/blob/master/Screenshot.jpg)
 
 ## Требования/Зависимости
 * Ruby
