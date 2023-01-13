@@ -57,8 +57,10 @@ class Bot
 
             @schedule_pack_index += 1
 
-            if @schedule_pack_index <= @quantity_of_schedule_packs 
+            if @schedule_pack_index < @quantity_of_schedule_packs 
               send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [['Да', 'Нет']])
+            else
+              bye_message(bot: bot, message: message)
             end
           end
         elsif message.text == 'Сегодня'
@@ -77,7 +79,7 @@ class Bot
 
             @schedule_pack_index += 1
 
-            if @schedule_pack_index <= @quantity_of_schedule_packs 
+            if @schedule_pack_index < @quantity_of_schedule_packs 
               send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [['Да', 'Нет']])
             else
               bye_message(bot: bot, message: message)

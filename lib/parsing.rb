@@ -42,7 +42,7 @@ class Parsing
       time_to_drive = line.match(/(?:[a-zA-Zа-яА-Я])(\d{2}.м)/){ $1 }[0..-3]
 
       from_to = line.match(/(?:м)([А-ЯЁ].+)/){ $1 }
-      from_to = from_to[0..-3].gsub(/(\d+$)/, '') if from_to[0..-3].match?(/([А-ЯЁа-яё]{2,})(?:\d+$)/)
+      from_to = from_to[0..-3].gsub(/(\d+$)/, '') if from_to[0..-3].match?(/([А-ЯЁа-яё()]{2,})(?:\d+$)/)
 
       price = line.match(/(\d+)(.₽\z)/){ $1 } if line.match?(/(\d+)(.₽\z)/)
 
