@@ -6,15 +6,10 @@
 
 ## Требования/Зависимости
 * Ruby
-
 * gem "dotenv"
-
 * gem "telegram-bot-ruby"
-
 * gem "mechanize"
-
 * gem "open-uri"
-
 * gem "nokogiri"
 
 ## Перед запуском
