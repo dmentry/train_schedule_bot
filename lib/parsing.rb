@@ -35,21 +35,24 @@ class Parsing
 
     parsed_doc.each do |line|
       # Удаляем лишнюю строку
-      next if !line.match?(/(?:[a-zA-Zа-яА-Я])(\d{2}.м)/){ $1 }
+      next if !line.match?(/(?:[a-zA-Zа-яА-Я])((\d{2}.м)|(\d.м))/){ $1 }
 
-      arrival = line.match(/\A\d{2}:\d{2}/).to_s
-      departure = line.match(/(?<!^)(\d{2}:\d{2})/).to_s
-      time_to_drive = line.match(/(?:[a-zA-Zа-яА-Я])(\d{2}.м)/){ $1 }[0..-3]
+      # Убрать текст в скобках между временем отправления и прибытия
+      line=line.gsub("#{line.match(/(?:\A\d{2}:\d{2})([А-ЯЁа-яё().\s\d]+)(?:\d{2}:\d{2})/){$1}}", '') if line.match?(/(?:\A\d{2}:\d{2})([А-ЯЁа-яё().\s\d]+)(?:\d{2}:\d{2})/)
+
+      departure = line.match(/\A\d{2}:\d{2}/).to_s
+      arrival = line.match(/(?<!^)(\d{2}:\d{2})/).to_s
+      time_to_drive = line.match(/(?:[a-zA-Zа-яА-Я])((\d{2}.м)|(\d.м))/){ $1 }[0..-3]
 
       from_to = line.match(/(?:м)([А-ЯЁ].+)/){ $1 }
-      from_to = from_to[0..-3].gsub(/(\d+$)/, '') if from_to[0..-3].match?(/([А-ЯЁа-яё()]{2,})(?:\d+$)/)
+      from_to = from_to.gsub(/(\d+.₽$)/, '') if from_to.match?(/.+\d+.₽$/)
 
       price = line.match(/(\d+)(.₽\z)/){ $1 } if line.match?(/(\d+)(.₽\z)/)
 
       temp_arr << if price
-                    "Отпр: #{ arrival }. Приб: #{ departure }. В пути: #{ time_to_drive }мин. Стоимость: #{price}руб.\n #{from_to}"
+                    "Отпр: #{ departure }. Приб: #{ arrival }. В пути: #{ time_to_drive }мин. Стоимость: #{price}руб.\n #{from_to}"
                   else
-                    "Отпр: #{ arrival }. Приб: #{ departure }. В пути: #{ time_to_drive }мин.\n#{from_to}"
+                    "Отпр: #{ departure }. Приб: #{ arrival }. В пути: #{ time_to_drive }мин.\nСтоимость не указана (экспресс).\n#{from_to}"
                   end
 
       if i < max_lines
