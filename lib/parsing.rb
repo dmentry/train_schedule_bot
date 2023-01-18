@@ -52,7 +52,7 @@ class Parsing
       temp_arr << if price
                     "Отпр: <b>#{ departure }</b>. Приб: <b>#{ arrival }</b>. \xF0\x9F\x9A\x82 <b>#{ time_to_drive }мин</b>. Стоимость: <b>#{price}руб</b>.\n#{from_to}"
                   else
-                    "Отпр: <b>#{ departure }</b>. Приб: <b>#{ arrival }</b>. \xF0\x9F\x9A\x82 <b>#{ time_to_drive }мин</b>.\nСтоимость не указана (экспресс).\n#{from_to}"
+                    "Отпр: <b>#{ departure }</b>. Приб: <b>#{ arrival }</b>. \xF0\x9F\x9A\x82 <b>#{ time_to_drive }мин</b>.\nСтоимость не указана (<b>экспресс</b>).\n#{from_to}"
                   end
 
       if i < max_lines
