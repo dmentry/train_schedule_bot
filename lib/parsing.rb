@@ -29,7 +29,7 @@ class Parsing
 
     out = []
     temp_arr = []
-    header = "Расписание #{ from } -> #{ to } на #{ Date.parse(check_date).strftime("%d.%m.%Y") }:"
+    header = "<b>#{ from }</b> \xE2\x9E\xA1 <b>#{ to }</b> на <b>#{ Date.parse(check_date).strftime("%d.%m.%Y") }</b>:"
 
     temp_arr << header
 
@@ -45,14 +45,14 @@ class Parsing
       time_to_drive = line.match(/(?:[a-zA-Zа-яА-Я])((\d{2}.м)|(\d.м))/){ $1 }[0..-3]
 
       from_to = line.match(/(?:м)([А-ЯЁ].+)/){ $1 }
-      from_to = from_to.gsub(/(\d+.₽$)/, '') if from_to.match?(/.+\d+.₽$/)
+      from_to = from_to.gsub(/(\d+.₽.*)/, '') if from_to.match?(/\d+.₽.*/)
 
-      price = line.match(/(\d+)(.₽\z)/){ $1 } if line.match?(/(\d+)(.₽\z)/)
+      price = line.match(/(\d+)(?:.₽)/){ $1 } if line.match?(/(\d+)(.₽)/)
 
       temp_arr << if price
-                    "Отпр: #{ departure }. Приб: #{ arrival }. В пути: #{ time_to_drive }мин. Стоимость: #{price}руб.\n #{from_to}"
+                    "Отпр: <b>#{ departure }</b>. Приб: <b>#{ arrival }</b>. \xF0\x9F\x9A\x82 <b>#{ time_to_drive }мин</b>. Стоимость: <b>#{price}руб</b>.\n#{from_to}"
                   else
-                    "Отпр: #{ departure }. Приб: #{ arrival }. В пути: #{ time_to_drive }мин.\nСтоимость не указана (экспресс).\n#{from_to}"
+                    "Отпр: <b>#{ departure }</b>. Приб: <b>#{ arrival }</b>. \xF0\x9F\x9A\x82 <b>#{ time_to_drive }мин</b>.\nСтоимость не указана (экспресс).\n#{from_to}"
                   end
 
       if i < max_lines

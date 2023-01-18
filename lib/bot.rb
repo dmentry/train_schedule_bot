@@ -1,11 +1,11 @@
 class Bot
   def initialize(stations:, buttons_arr1:, buttons_arr2:, max_lines:, bot_token:, url:)
-    @stations = stations
+    @stations     = stations
     @buttons_arr1 = buttons_arr1
     @buttons_arr2 = buttons_arr2
-    @max_lines = max_lines
-    @bot_token = bot_token
-    @url = url
+    @max_lines    = max_lines
+    @bot_token    = bot_token
+    @url          = url
 
     clear_values
   end
@@ -46,7 +46,7 @@ class Bot
             @quantity_of_schedule_packs = @out.size - 1
 
             @out[@schedule_pack_index].each do |schedule_line|
-              bot.api.send_message(chat_id: message.chat.id, text: schedule_line)
+              bot.api.send_message(chat_id: message.chat.id, text: schedule_line, parse_mode: 'HTML')
 
               if schedule_line == "Электричек на указанную дату нет."
                 bye_message(bot: bot, message: message)
@@ -74,7 +74,7 @@ class Bot
         elsif message.text == 'Да'
           if !@out.empty?
             @out[@schedule_pack_index].each do |schedule_line|
-              bot.api.send_message(chat_id: message.chat.id, text: schedule_line)
+              bot.api.send_message(chat_id: message.chat.id, text: schedule_line, parse_mode: 'HTML')
             end
 
             @schedule_pack_index += 1
@@ -113,10 +113,10 @@ class Bot
   end
 
   def clear_values
-    @out = []
+    @out  = []
     @from = ''
-    @to = ''
+    @to   = ''
     @quantity_of_schedule_packs = 1
-    @schedule_pack_index = 0
+    @schedule_pack_index        = 0
   end
 end
