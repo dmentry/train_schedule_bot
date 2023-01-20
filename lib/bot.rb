@@ -1,6 +1,5 @@
 class Bot
-  def initialize(stations:, buttons_arr1:, buttons_arr2:, max_lines:, bot_token:, url:)
-    @stations     = stations
+  def initialize(buttons_arr1:, buttons_arr2:, max_lines:, bot_token:, url:)
     @buttons_arr1 = buttons_arr1
     @buttons_arr2 = buttons_arr2
     @max_lines    = max_lines
@@ -29,11 +28,16 @@ class Bot
           bye_message(bot: bot, message: message)
 
           clear_values
-        elsif STATIONS.include?(message.text)
+        elsif STATIONS_LIST1.include?(message.text.strip.downcase) || STATIONS_LIST2.include?(message.text.strip.downcase)
+          station_name = if STATIONS_LIST2.include?(message.text.strip.downcase)
+                           'Москва Курская'
+                         else
+                           message.text.strip
+                         end
           if @from.empty?
-            @from = message.text
+            @from = station_name
           else
-            @to = message.text
+            @to = station_name
           end
 
           if @to.empty?
@@ -49,9 +53,9 @@ class Bot
               bot.api.send_message(chat_id: message.chat.id, text: schedule_line, parse_mode: 'HTML')
 
               if schedule_line == "Электричек на указанную дату нет."
-                bye_message(bot: bot, message: message)
-
-                clear_values       
+                clear_values
+                # Если не приравнять к нулю, то дальше из-за условия выскочит вопрос 'Еще?'
+                @quantity_of_schedule_packs = 0
               end
             end
 
@@ -92,7 +96,8 @@ class Bot
 
           clear_values
         else
-          bot.api.send_message(chat_id: message.chat.id, text: "Извините, такой команды нет.")
+          bot.api.send_message(chat_id: message.chat.id, text: "Неизвестная команда.")
+          bye_message(bot: bot, message: message, additional_text: "Попробуйте начать заново, нажав /start.\n")
 
           clear_values
         end
@@ -107,9 +112,11 @@ class Bot
     bot.api.send_message(chat_id: message.chat.id, text: question, reply_markup: answers)
   end
 
-  def bye_message(bot:, message:)
+  def bye_message(bot:, message:, additional_text: '')
+    bye_text = additional_text + "Пока, #{message.from.first_name}!"
     kb = Telegram::Bot::Types::ReplyKeyboardRemove.new(remove_keyboard: true)
-    bot.api.send_message(chat_id: message.chat.id, text: "Пока, #{message.from.first_name}!", reply_markup: kb)
+
+    bot.api.send_message(chat_id: message.chat.id, text: bye_text, reply_markup: kb, parse_mode: 'HTML')
   end
 
   def clear_values
