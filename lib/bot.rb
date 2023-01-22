@@ -1,7 +1,5 @@
 class Bot
-  def initialize(buttons_arr1:, buttons_arr2:, max_lines:, bot_token:, url:)
-    @buttons_arr1 = buttons_arr1
-    @buttons_arr2 = buttons_arr2
+  def initialize(max_lines:, bot_token:, url:)
     @max_lines    = max_lines
     @bot_token    = bot_token
     @url          = url

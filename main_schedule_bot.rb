@@ -20,6 +20,6 @@ MAX_LINES = 8
 
 tg_bot_token = ENV['TELEGRAM_BOT_API_TOKEN']
 
-bot=Bot.new(buttons_arr1: BUTTONS_ARR1, buttons_arr2: BUTTONS_ARR2, max_lines: MAX_LINES, bot_token: tg_bot_token, url: URL)
+bot=Bot.new(max_lines: MAX_LINES, bot_token: tg_bot_token, url: URL)
 
 bot.main_method
