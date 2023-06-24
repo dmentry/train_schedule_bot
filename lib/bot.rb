@@ -77,7 +77,7 @@ class Bot
               @check_date = (Date.today + 1)
 
               send_msg_with_keabord(bot: bot, message: message, question: 'Выберите станцию отправления из списка:', keyboard_values: [BUTTONS_ARR1, BUTTONS_ARR2])
-            elsif message.text == 'Да'
+            elsif message.text.match?(/\sДа\z/)
               if !@out.empty?
                 @out[@schedule_pack_index].each do |schedule_line|
                   bot.api.send_message(chat_id: message.chat.id, text: schedule_line, parse_mode: 'HTML')
@@ -93,7 +93,7 @@ class Bot
               else
                 bot.api.send_message(chat_id: message.chat.id, text: "Сначала начните диалог, нажав на '/start'")
               end
-            elsif message.text == 'Нет'
+            elsif message.text.match?(/\sНет\z/)
               bye_message(bot: bot, message: message)
 
               clear_values
