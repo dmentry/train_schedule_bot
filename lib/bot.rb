@@ -18,11 +18,12 @@ class Bot
         bot.listen do |message|
           next if start_bot_time - message.date > 650
 
-          if !message&.text.nil?
+          # if !message&.text.nil?
+          if message.respond_to?(:text)
             if message.text == '/start'
               clear_values
 
-              bot.api.send_Message(chat_id: message.chat.id, text: "Привет, #{ message.from.first_name }!")
+              bot.api.send_Message(chat_id: message.chat.id, text: 'Привет!')
 
               send_msg_with_keabord(bot: bot, message: message, question: 'Выберите, когда ехать:', keyboard_values: [['Сегодня', 'Завтра']])
             elsif message.text == '/stop'
@@ -63,7 +64,7 @@ class Bot
                 @schedule_pack_index += 1
 
                 if @schedule_pack_index <= @quantity_of_schedule_packs 
-                  send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [['Да', 'Нет']])
+                  send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [['✔️ Да', '❌ Нет']])
                 else
                   bye_message(bot: bot, message: message)
                 end
@@ -85,7 +86,7 @@ class Bot
                 @schedule_pack_index += 1
 
                 if @schedule_pack_index <= @quantity_of_schedule_packs 
-                  send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [['Да', 'Нет']])
+                  send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [['✔️ Да', '❌ Нет']])
                 else
                   bye_message(bot: bot, message: message)
                 end
@@ -120,7 +121,7 @@ class Bot
   end
 
   def bye_message(bot:, message:, additional_text: '')
-    bye_text = additional_text + "Пока, #{message.from.first_name}!"
+    bye_text = additional_text + 'Пока!'
     kb = Telegram::Bot::Types::ReplyKeyboardRemove.new(remove_keyboard: true)
 
     bot.api.send_message(chat_id: message.chat.id, text: bye_text, reply_markup: kb, parse_mode: 'HTML')
