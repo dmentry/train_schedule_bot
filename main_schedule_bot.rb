@@ -8,12 +8,14 @@ require_relative 'lib/parsing'
 
 URL = 'https://www.tutu.ru/prigorod/'
 
-STATIONS_BUTTONS = ['Железнодорожная', 'Ольгино', 'Нижегородская', 'Серп и Молот', 'Москва Курская']
+STATIONS_BUTTONS = [[text: 'Железнодорожная'], [text: 'Ольгино'], [text: 'Нижегородская'], [text: 'Серп и Молот'], [text: 'Москва Курская']]
 # Отдельный список названий, чтобы сверяться, если название станции будет набрано на клавиатуре, а не нажатием на кнопку
 STATIONS_LIST1 = ['железнодорожная', 'ольгино', 'нижегородская', 'серп и молот']
 STATIONS_LIST2 = ['москва курская', 'москва', 'курская']
 
-BUTTONS_ARR1, BUTTONS_ARR2 = STATIONS_BUTTONS.each_slice((STATIONS_BUTTONS.size / 2.0).round).to_a
+buttons_arr1, buttons_arr2 = STATIONS_BUTTONS.each_slice((STATIONS_BUTTONS.size / 2.0).round).to_a
+BUTTONS_ARR1 = buttons_arr1.flatten
+BUTTONS_ARR2 = buttons_arr2.flatten
 
 # Количество выводимых строк в расписании
 MAX_LINES = 8

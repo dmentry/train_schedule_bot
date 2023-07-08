@@ -25,7 +25,7 @@ class Bot
 
               bot.api.send_Message(chat_id: message.chat.id, text: 'Привет!')
 
-              send_msg_with_keabord(bot: bot, message: message, question: 'Выберите, когда ехать:', keyboard_values: [['Сегодня', 'Завтра']])
+              send_msg_with_keabord(bot: bot, message: message, question: 'Выберите, когда ехать:', keyboard_values: [[text: 'Сегодня'], [text: 'Завтра']])
             elsif message.text == '/stop'
               bye_message(bot: bot, message: message)
 
@@ -64,7 +64,7 @@ class Bot
                 @schedule_pack_index += 1
 
                 if @schedule_pack_index <= @quantity_of_schedule_packs 
-                  send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [['✔️ Да', '❌ Нет']])
+                  send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [[text: '✔️ Да'], [text: '❌ Нет']])
                 else
                   bye_message(bot: bot, message: message)
                 end
@@ -86,7 +86,7 @@ class Bot
                 @schedule_pack_index += 1
 
                 if @schedule_pack_index <= @quantity_of_schedule_packs 
-                  send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [['✔️ Да', '❌ Нет']])
+                  send_msg_with_keabord(bot: bot, message: message, question: 'Еще?', keyboard_values: [[text: '✔️ Да'], [text: '❌ Нет']])
                 else
                   bye_message(bot: bot, message: message)
                 end
