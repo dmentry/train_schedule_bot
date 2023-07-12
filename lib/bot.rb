@@ -21,6 +21,10 @@ class Bot
 
             # if !message&.text.nil?
             if message.respond_to?(:text)
+              File.open('users_id.txt', "a:UTF-8") do |file| 
+                file.puts("#{ Time.now.strftime("%d.%m.%Y %T") }, id: #{ message.chat.id }, username: #{ message.chat.username }.")
+              end
+
               if message.text == '/start'
                 clear_values
 
@@ -112,10 +116,12 @@ class Bot
           end
         end
       rescue => e
-        # сделать запись в текстовый файл
-        puts '***********************************************************************************************'
-        puts e.message
-        puts '***********************************************************************************************'
+        File.open('tg_bot_log.txt', "a:UTF-8") do |file| 
+          file.puts("#{ Time.now }:")
+          file.puts('Ошибка в главном цикле:')
+          file.puts("Класс ошибки: #{ e.class }")
+          file.puts("Сообщение ошибки: #{ e.message }")
+        end
       end
     end  
   end
@@ -134,10 +140,12 @@ class Bot
     begin
       bot.api.send_message(chat_id: message.chat.id, text: bye_text, reply_markup: kb, parse_mode: 'HTML')
     rescue => e
-      # сделать запись в текстовый файл
-      puts '***********************************************************************************************'
-      puts e.message
-      puts '***********************************************************************************************'
+      File.open('tg_bot_log.txt', "a:UTF-8") do |file| 
+        file.puts("#{ Time.now }:")
+        file.puts('Ошибка в send_message:')
+        file.puts("Класс ошибки: #{ e.class }")
+        file.puts("Сообщение ошибки: #{ e.message }")
+      end
     end
   end
 
